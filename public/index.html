@@ -2,7 +2,7 @@
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BackMessage</title>
     <script src="socket.io.js"></script>
     <script>
@@ -69,21 +69,37 @@
     </script>
   </head>
   <body>
-    <input
-      type="text"
-      id="me"
-      placeholder="me"
-      onkeyup="this.value = this.value.toLowerCase();"
-      style="text-transform: lowercase;"
-    />
-    <input
-      type="text"
-      id="to"
-      placeholder="to"
-      onkeyup="this.value = this.value.toLowerCase();"
-      style="text-transform: lowercase;"
-    />
-    <input type="text" id="msg" onkeyup="m()" placeholder="msg" />
+    <table width="100%">
+      <tr>
+        <td>Kullanıcı adınız:</td>
+        <td>
+          <input
+            type="text"
+            id="me"
+            placeholder="me"
+            onkeyup="this.value = this.value.toLowerCase();"
+            style="text-transform: lowercase"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td>Kime:</td>
+        <td>
+          <input
+            type="text"
+            id="to"
+            placeholder="to"
+            onkeyup="this.value = this.value.toLowerCase();"
+            style="text-transform: lowercase"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td>Mesaj yazın:</td>
+        <td><input type="text" id="msg" onkeyup="m()" placeholder="msg" /></td>
+      </tr>
+    </table>
+
     <pre id="msgs"></pre>
   </body>
 </html>
