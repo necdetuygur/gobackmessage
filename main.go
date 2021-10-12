@@ -2,16 +2,21 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"strings"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	socketio "github.com/googollee/go-socket.io"
+
+	"github.com/gin-gonic/gin"
 )
 
 var Sockets []socketio.Conn
 
 func main() {
-	var server = socketio.NewServer(nil)
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	server := socketio.NewServer(nil)
 
 	server.OnConnect("/", func(s socketio.Conn) error {
 		s.SetContext("")
@@ -47,9 +52,24 @@ func main() {
 		BroadcastOne(splited[0], "Dream", context+"|"+splited[1])
 	})
 
-	http.Handle("/socket.io/", server)
-	http.Handle("/", http.FileServer(http.Dir("./public")))
-	http.ListenAndServe("0.0.0.0:8084", nil)
+	router.GET("/socket.io/*any", gin.WrapH(server))
+	router.POST("/socket.io/*any", gin.WrapH(server))
+	router.StaticFS("./home", gin.Dir("./public", false))
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "*"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
+
+	if err := router.Run("0.0.0.0:8084"); err != nil {
+		fmt.Println("failed run app: ", err)
+	}
 }
 
 func BroadcastAll(event string, data string) {
