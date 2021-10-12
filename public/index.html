@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BackMessage</title>
+    <script src="socket.io.js"></script>
+    <script>
+      socket = io("http://localhost:8084");
+      socket.on("connect", function () {
+        console.log("connected");
+        setTimeout(s, 100);
+      });
+      socket.on("Dream", function (a) {
+        a = a.split("|");
+        if (a.length > 1) {
+          d("msgs").innerHTML = a[0] + ": " + a[1] + "\n" + d("msgs").innerHTML;
+        }
+      });
+      d = function (a) {
+        return document.getElementById(a);
+      };
+      s = function () {
+        SetName(d("me").value);
+      };
+      m = function () {
+        if (event.keyCode == 13) {
+          Dream(d("to").value + "|" + d("msg").value);
+          d("msgs").innerHTML =
+            d("me").value + ": " + d("msg").value + "\n" + d("msgs").innerHTML;
+          d("msg").value = "";
+        }
+      };
+
+      function Dream(data) {
+        if (typeof data === "object") {
+          data = JSON.stringify(data);
+        }
+        socket.emit("Dream", data);
+      }
+
+      function SetName(name) {
+        socket.emit("SetName", name);
+      }
+    </script>
+  </head>
+  <body>
+    <input type="text" id="me" onkeyup="s()" placeholder="me" />
+    <input type="text" id="to" placeholder="to" />
+    <input type="text" id="msg" onkeyup="m()" placeholder="msg" />
+    <pre id="msgs"></pre>
+  </body>
+</html>
