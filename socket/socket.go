@@ -3,19 +3,16 @@ package socket
 import (
 	"fmt"
 	"strings"
-	"time"
 
-	"github.com/gin-contrib/cors"
 	socketio "github.com/googollee/go-socket.io"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 var Sockets []socketio.Conn
 
 func Start(port string) {
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.New()
 	server := socketio.NewServer(nil)
 
 	server.OnConnect("/", func(s socketio.Conn) error {
@@ -52,24 +49,19 @@ func Start(port string) {
 		BroadcastOne(splited[0], "Dream", context+"|"+splited[1])
 	})
 
-	router.GET("/socket.io/*any", gin.WrapH(server))
-	router.POST("/socket.io/*any", gin.WrapH(server))
-	router.StaticFS("./home", gin.Dir("./public", false))
+	e := echo.New()
+	e.HideBanner = true
 
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowHeaders:     []string{"Origin"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "*"
-		},
-		MaxAge: 12 * time.Hour,
+	e.Static("/", "./public")
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
-
-	if err := router.Run("0.0.0.0:" + port); err != nil {
-		fmt.Println("failed run app: ", err)
-	}
+	e.Any("/socket.io/", func(context echo.Context) error {
+		server.ServeHTTP(context.Response(), context.Request())
+		return nil
+	})
+	e.Logger.Fatal(e.Start("0.0.0.0:" + port))
 }
 
 func BroadcastAll(event string, data string) {
