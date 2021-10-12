@@ -67,32 +67,29 @@
         );
       });
     </script>
+    <style>
+      input[type="text"] {
+        margin: 3px;
+        padding: 3px;
+      }
+    </style>
   </head>
   <body>
-    <table width="100%">
-      <tr>
-        <td><pre>Kullanıcı adınız:</pre></td>
-        <td>
-          <input
-            type="text"
-            id="me"
-            onkeyup="this.value = this.value.toLowerCase();"
-            style="text-transform: lowercase"
-          />
-        </td>
-        <td><pre>Kime:</pre></td>
-        <td>
-          <input
-            type="text"
-            id="to"
-            onkeyup="this.value = this.value.toLowerCase();"
-            style="text-transform: lowercase"
-          />
-        </td>
-        <td><pre>Mesaj yazın:</pre></td>
-        <td><input type="text" id="msg" onkeyup="m()" /></td>
-      </tr>
-    </table>
+    <input
+      type="text"
+      id="me"
+      placeholder="kullanıcı adınız"
+      onkeyup="this.value = this.value.toLowerCase();"
+      style="text-transform: lowercase"
+    />
+    <input
+      type="text"
+      id="to"
+      placeholder="kime"
+      onkeyup="this.value = this.value.toLowerCase();"
+      style="text-transform: lowercase"
+    />
+    <input type="text" id="msg" placeholder="mesaj yazın" onkeyup="m()" />
     <hr />
     <pre id="msgs"></pre>
   </body>
