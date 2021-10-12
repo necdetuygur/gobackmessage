@@ -37,7 +37,7 @@ func main() {
 		s.SetContext(data)
 		AdSockets(s)
 		RemoveSockets(s)
-		fmt.Println("ctx:", s.Context())
+		// fmt.Println("ctx:", s.Context())
 		// fmt.Println(Sockets)
 	})
 
