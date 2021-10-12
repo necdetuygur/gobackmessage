@@ -5,5 +5,9 @@ import (
 )
 
 func main() {
-	s.Start("8084")
+	port := "8084"
+	if os.Getenv("PORT") != "" {
+		port = os.Getenv("PORT")
+	}
+	s.Start(port)
 }
