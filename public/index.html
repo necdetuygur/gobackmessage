@@ -6,23 +6,24 @@
     <script src="socket.io.js"></script>
     <script>
       socket = io();
-      socket.on("connect", function () {
+
+      socket.on("connect", () => {
         console.log("connected");
         setTimeout(s, 100);
       });
-      socket.on("Dream", function (a) {
+
+      socket.on("Dream", (a) => {
         a = a.split("|");
         if (a.length > 1) {
           d("msgs").innerHTML = a[0] + ": " + a[1] + "\n" + d("msgs").innerHTML;
         }
       });
-      d = function (a) {
-        return document.getElementById(a);
-      };
-      s = function () {
-        SetName(d("me").value);
-      };
-      m = function () {
+
+      var d = (a) => document.getElementById(a);
+
+      var s = () => SetName(d("me").value);
+
+      var m = () => {
         if (event.keyCode == 13) {
           Dream(d("to").value + "|" + d("msg").value);
           d("msgs").innerHTML =
@@ -31,20 +32,43 @@
         }
       };
 
-      function Dream(data) {
+      var Dream = (data) => {
         if (typeof data === "object") {
           data = JSON.stringify(data);
         }
         socket.emit("Dream", data);
+      };
+
+      var SetName = (name) => socket.emit("SetName", name);
+
+      function Debounce(func, wait, immediate) {
+        var timeout;
+        return function () {
+          var context = this,
+            args = arguments;
+          var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+          };
+          var callNow = immediate && !timeout;
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+          if (callNow) func.apply(context, args);
+        };
       }
 
-      function SetName(name) {
-        socket.emit("SetName", name);
-      }
+      window.addEventListener("load", () => {
+        d("me").addEventListener(
+          "keyup",
+          Debounce(() => {
+            s();
+          }, 500)
+        );
+      });
     </script>
   </head>
   <body>
-    <input type="text" id="me" onkeyup="s()" placeholder="me" />
+    <input type="text" id="me" placeholder="me" />
     <input type="text" id="to" placeholder="to" />
     <input type="text" id="msg" onkeyup="m()" placeholder="msg" />
     <pre id="msgs"></pre>
