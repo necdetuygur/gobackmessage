@@ -68,8 +68,20 @@
     </script>
   </head>
   <body>
-    <input type="text" id="me" placeholder="me" />
-    <input type="text" id="to" placeholder="to" />
+    <input
+      type="text"
+      id="me"
+      placeholder="me"
+      onkeyup="this.value = this.value.toLowerCase();"
+      style="text-transform: lowercase;"
+    />
+    <input
+      type="text"
+      id="to"
+      placeholder="to"
+      onkeyup="this.value = this.value.toLowerCase();"
+      style="text-transform: lowercase;"
+    />
     <input type="text" id="msg" onkeyup="m()" placeholder="msg" />
     <pre id="msgs"></pre>
   </body>
