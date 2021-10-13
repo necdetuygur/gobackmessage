@@ -16,7 +16,15 @@
       socket.on("Dream", (a) => {
         a = a.split("|");
         if (a.length > 1) {
-          d("msgs").innerHTML = a[0] + ": " + a[1] + "\n" + d("msgs").innerHTML;
+          var msg = a[0] + ": " + a[1];
+          
+          Bildirim(
+            "BackMessage",
+            msg,
+            "https://img1.pngindir.com/20180704/vzj/kisspng-four-leaf-clover-royalty-free-5b3cb1a93ece21.5556515615307042972573.jpg"
+          );
+
+          d("msgs").innerHTML = msg + "\n" + d("msgs").innerHTML;
         }
       });
 
@@ -58,7 +66,20 @@
         };
       }
 
+      function Bildirim(title, text, img) {
+        Notification.requestPermission().then(function (result) {
+          /*console.log(result);*/
+        });
+        if (document.hidden) {
+          new Notification(title, { body: text, icon: img });
+        }
+      }
+
       window.addEventListener("load", () => {
+        Notification.requestPermission().then(function (result) {
+          /*console.log(result);*/
+        });
+
         d("me").addEventListener(
           "keyup",
           Debounce(() => {
