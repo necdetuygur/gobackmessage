@@ -1,0 +1,25 @@
+{
+  "name": "gobackmessage",
+  "version": "1.0.0",
+  "description": "Demo:\r [https://gobm.herokuapp.com](https://gobm.herokuapp.com)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/necdetuygur/gobackmessage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/necdetuygur/gobackmessage/issues"
+  },
+  "homepage": "https://github.com/necdetuygur/gobackmessage#readme",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.2"
+  }
+}
