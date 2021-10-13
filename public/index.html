@@ -17,7 +17,7 @@
         a = a.split("|");
         if (a.length > 1) {
           var msg = a[0] + ": " + a[1];
-          
+
           Bildirim(
             "BackMessage",
             msg,
@@ -25,19 +25,25 @@
           );
 
           d("msgs").innerHTML = msg + "\n" + d("msgs").innerHTML;
+
+          ls("msgs", d("msgs").innerHTML);
         }
       });
 
       var d = (a) => document.getElementById(a);
 
-      var s = () => SetName(d("me").value);
+      var s = () => {
+        socket.emit("SetName", d("me").value);
+        ls("me", d("me").value);
+      };
 
       var m = () => {
-        if (event.keyCode == 13) {
+        if (event.keyCode == 13 && d("msg").value) {
           Dream(d("to").value + "|" + d("msg").value);
           d("msgs").innerHTML =
             d("me").value + ": " + d("msg").value + "\n" + d("msgs").innerHTML;
           d("msg").value = "";
+          ls("msgs", d("msgs").innerHTML);
         }
       };
 
@@ -47,8 +53,6 @@
         }
         socket.emit("Dream", data);
       };
-
-      var SetName = (name) => socket.emit("SetName", name);
 
       function Debounce(func, wait, immediate) {
         var timeout;
@@ -75,10 +79,32 @@
         }
       }
 
+      function ls(key, obj) {
+        key = window.top.location.href + "_" + key;
+        if (obj) {
+          localStorage.setItem(key, JSON.stringify(obj));
+        }
+        if (localStorage.getItem(key) != null) {
+          return JSON.parse(localStorage.getItem(key));
+        } else {
+          return [];
+        }
+      }
+
+      var clearMsgs = () => {
+        ls("msgs", []);
+        d("msgs").innerHTML = "";
+      };
+
       window.addEventListener("load", () => {
         Notification.requestPermission().then(function (result) {
           /*console.log(result);*/
         });
+
+        d("me").value = ls("me");
+        s();
+
+        d("msgs").innerHTML = ls("msgs");
 
         d("me").addEventListener(
           "keyup",
@@ -89,7 +115,7 @@
       });
     </script>
     <style>
-      input[type="text"] {
+      input[type="text"], button {
         margin: 3px;
         padding: 3px;
       }
@@ -111,6 +137,8 @@
       style="text-transform: lowercase"
     />
     <input type="text" id="msg" placeholder="mesaj yazın" onkeyup="m()" />
+    <button type="button" onclick="m()">gönder</button>
+    <button type="button" onclick="clearMsgs()">mesajları temizle</button>
     <hr />
     <pre id="msgs"></pre>
   </body>
