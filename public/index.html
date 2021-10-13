@@ -8,12 +8,12 @@
     <script>
       socket = io();
 
-      socket.on("connect", () => {
+      socket.on("connect", function () {
         console.log("connected");
         setTimeout(s, 100);
       });
 
-      socket.on("Dream", (a) => {
+      socket.on("Dream", function (a) {
         a = a.split("|");
         if (a.length > 1) {
           var msg = a[0] + ": " + a[1];
@@ -30,14 +30,15 @@
         }
       });
 
-      var d = (a) => document.getElementById(a);
+      function d(a) {
+        return document.getElementById(a);
+      }
 
-      var s = () => {
+      function s() {
         socket.emit("SetName", d("me").value);
         ls("me", d("me").value);
-      };
-
-      var m = () => {
+      }
+      function m() {
         if (event.keyCode == 13 && d("msg").value) {
           Dream(d("to").value + "|" + d("msg").value);
           d("msgs").innerHTML =
@@ -45,14 +46,14 @@
           d("msg").value = "";
           ls("msgs", d("msgs").innerHTML);
         }
-      };
+      }
 
-      var Dream = (data) => {
+      function Dream(data) {
         if (typeof data === "object") {
           data = JSON.stringify(data);
         }
         socket.emit("Dream", data);
-      };
+      }
 
       function Debounce(func, wait, immediate) {
         var timeout;
@@ -91,12 +92,12 @@
         }
       }
 
-      var clearMsgs = () => {
+      var clearMsgs = function () {
         ls("msgs", []);
         d("msgs").innerHTML = "";
       };
 
-      window.addEventListener("load", () => {
+      window.addEventListener("load", function () {
         Notification.requestPermission().then(function (result) {
           /*console.log(result);*/
         });
@@ -108,14 +109,15 @@
 
         d("me").addEventListener(
           "keyup",
-          Debounce(() => {
+          Debounce(function () {
             s();
           }, 500)
         );
       });
     </script>
     <style>
-      input[type="text"], button {
+      input[type="text"],
+      button {
         margin: 3px;
         padding: 3px;
       }
