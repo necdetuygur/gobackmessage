@@ -2,3 +2,9 @@
 
 Demo:
 [https://gobm.herokuapp.com](https://gobm.herokuapp.com)
+
+
+```
+npm i
+gulp js
+```
