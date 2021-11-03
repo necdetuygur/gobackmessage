@@ -8,3 +8,7 @@ Demo:
 npm i
 gulp js
 ```
+
+```
+go run .
+```
